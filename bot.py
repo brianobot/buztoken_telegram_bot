@@ -49,7 +49,7 @@ def send_welcome(message: Message):
     markup.add(btn1, btn2, btn3)
 
     user_id = message.from_user.id
-    user_data = functions.get_user(user_id)
+    user_data = functions.get_user(str(user_id))
     print("✅✅✅ User data = ", user_data)
 
     # Send the welcome message along with the buttons
@@ -75,7 +75,7 @@ def handle_usage_commands(message: Message):
 
 @bot.message_handler(commands=['config'])
 def user_info(message: Message):
-    user_data = functions.get_user(message.from_user.id)
+    user_data = functions.get_user(str(message.from_user.id))
     formatted_user_data = f"👤 **ID**: {user_data.get("id")},\n🐝 **Buz Tokens**: {user_data.get("buz_tokens", 0)},\n🧑‍🧒‍🧒 **Referrals**:  {user_data.get("referral_counts", 0)},"
     bot.reply_to(message, formatted_user_data, parse_mode="Markdown")
 
@@ -86,10 +86,10 @@ def handle_answer_callback(call: CallbackQuery):
     user_id = call.from_user.id
 
     question_id = callback_data.get("question_id")
-    question_data = functions.get_question(question_id)
+    question_data = functions.get_question(question_id, str(user_id))
     question_answer = question_data.get("answer")
 
-    current_question_count = functions.increment_user_question_count(user_id)
+    current_question_count = functions.increment_user_question_count(str(user_id))
     # this handle the edge case not responding with status for last daily question
     if (current_question_count - 1) > MAX_DAILY_QUESTION_COUNT:
         bot.send_message(user_id, "Max Daily Question Exceed! 🥹")
@@ -109,7 +109,8 @@ def start_game(user_id: str):
 
 
 def send_question(user_id: str, question_count: int = 1):
-    current_question = functions.get_random_question()
+    current_question = functions.get_random_question(str(user_id))
+    print(f"✅✅✅✅ {current_question = }")
     current_question_text = current_question['question']
     current_question_options = current_question['options']
 

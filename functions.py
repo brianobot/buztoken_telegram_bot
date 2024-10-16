@@ -23,17 +23,18 @@ quiz_data = [
 def get_user(user_id: str) -> dict:
     url = "http://localhost:8000/api/users/"
     try:
-        response = requests.post(url, json={"id": user_id})
+        response = requests.post(url, json={"id": user_id}, headers={"TELEGRAM-USER-ID": user_id})
         user_data = response.json()
-    except Exception:
+    except Exception as err:
+        print("🔥🔥🔥🔥 Exception = ", err)
         user_data = {}
     return user_data
 
 
-def get_random_question() -> dict:
+def get_random_question(user_id: str) -> dict:
     url = "http://localhost:8000/api/question/"
     try:
-        response = requests.get(url)
+        response = requests.get(url, headers={"TELEGRAM-USER-ID": user_id})
         question_data = response.json()
     except Exception:
         pass
@@ -42,10 +43,10 @@ def get_random_question() -> dict:
     return quiz_data[random.randint(0, len(quiz_data) - 1)]
 
 
-def get_question(question_id: str) -> dict:
+def get_question(question_id: str, user_id: str) -> dict:
     url = f"http://localhost:8000/api/question/{question_id}/"
     try:
-        response = requests.get(url)
+        response = requests.get(url, headers={"TELEGRAM-USER-ID": user_id})
         question_data = response.json()
     except Exception:
         pass

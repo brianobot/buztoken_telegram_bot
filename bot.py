@@ -4,6 +4,7 @@ import telebot
 import diskcache
 
 from telebot.types import Message
+from telebot.types import WebAppInfo
 from telebot.types import CallbackQuery
 from telebot.types import KeyboardButton
 from telebot.types import ReplyKeyboardMarkup
@@ -39,12 +40,21 @@ Tap 'About' to visit our website and learn more about what we're building.
 
 @bot.message_handler(commands=START_COMMANDS)
 def send_welcome(message: Message):
+    referral_code = None
+    if len(message.text.split()) > 1:
+        referral_code = message.text.split()[1]
+
+    if referral_code:
+        refer_response = functions.create_referral(message.from_user.id, referral_code)
+        print("🇳🇬🇳🇬🇳🇬🇳🇬 Refer Response = ", refer_response)
+    
+    print(f"📊📊📊📊 {referral_code = }")
     # Create a reply keyboard markup
     markup = ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
-    btn1 = KeyboardButton(USAGE_COMMANDS[0])
+    btn1 = KeyboardButton(USAGE_COMMANDS[0], web_app=WebAppInfo(url="https://telegram-mini-app-ui-1kw5.onrender.com"))
     btn2 = KeyboardButton(USAGE_COMMANDS[1])
     btn3 = KeyboardButton(USAGE_COMMANDS[2])
-
+   
     # Add buttons to the markup
     markup.add(btn1, btn2, btn3)
 
@@ -65,10 +75,17 @@ def handle_usage_commands(message: Message):
             bot.reply_to(message, "Quiz Instructions 🎯\n- Type exit to End Quiz Session")
             start_game(message.from_user.id)
         case "join the community":
-            bot.reply_to(message, "about to join community")
+            markup = InlineKeyboardMarkup()
+            join_button = InlineKeyboardButton("Join Our Channel", url="https://t.me/buzmode")
+            markup.add(join_button)
+            
+            bot.reply_to(message, "Click the button below to join our Telegram channel:", reply_markup=markup)
         case "about us ℹ️":
-            bot.reply_to(message, "about us? here is some info..")
-            pass
+            markup = InlineKeyboardMarkup()
+            about_button = InlineKeyboardButton("About Us", url="https://twtr.to/Cvh31")
+            markup.add(about_button)
+            
+            bot.reply_to(message, "Click to see About us", reply_markup=markup)
         case _:
             bot.reply_to(message, "🤷🏾‍♂️ I do not Understand this command, Type start to start again")
 

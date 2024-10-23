@@ -5,6 +5,8 @@ from datetime import datetime, timedelta
 
 cache = diskcache.Cache('bot_cache_dir')
 
+WEBAPP_BASEURL = "https://telegram-mini-app-api-m2uy.onrender.com"
+
 
 quiz_data = [
     {"id": 1, "question": "What is the capital of France?", "options": ["Paris", "Berlin", "Madrid"], "answer": "Paris"},
@@ -21,9 +23,9 @@ quiz_data = [
 
 
 def get_user(user_id: str) -> dict:
-    url = "http://localhost:8000/api/users/"
+    url = f"{WEBAPP_BASEURL}/api/users/"
     try:
-        response = requests.post(url, json={"id": user_id}, headers={"TELEGRAM-USER-ID": user_id})
+        response = requests.get(url, headers={"TELEGRAM-USER-ID": user_id})
         user_data = response.json()
     except Exception as err:
         print("🔥🔥🔥🔥 Exception = ", err)
@@ -31,8 +33,23 @@ def get_user(user_id: str) -> dict:
     return user_data
 
 
+def create_referral(user_id: str, referral_code: str):
+    url = f"{WEBAPP_BASEURL}/api/refer/"
+    try:
+        data = {
+            "referred": str(user_id),
+            "referrer": str(referral_code),
+        }
+        response = requests.post(url, json=data, headers={"TELEGRAM-USER-ID": str(user_id)})
+        referral_data = response.json()
+    except Exception as err:
+        print("🔥🔥🔥🔥 Exception = ", err)
+        referral_data = {}
+    return referral_data
+
+
 def get_random_question(user_id: str) -> dict:
-    url = "http://localhost:8000/api/question/"
+    url = f"{WEBAPP_BASEURL}/api/question/"
     try:
         response = requests.get(url, headers={"TELEGRAM-USER-ID": user_id})
         question_data = response.json()
@@ -44,7 +61,7 @@ def get_random_question(user_id: str) -> dict:
 
 
 def get_question(question_id: str, user_id: str) -> dict:
-    url = f"http://localhost:8000/api/question/{question_id}/"
+    url = f"{WEBAPP_BASEURL}/api/question/{question_id}/"
     try:
         response = requests.get(url, headers={"TELEGRAM-USER-ID": user_id})
         question_data = response.json()

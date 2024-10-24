@@ -2,6 +2,7 @@ import json
 import environ
 import telebot
 import diskcache
+import logging
 
 from telebot.types import Message
 from telebot.types import WebAppInfo
@@ -17,11 +18,14 @@ import functions
 env = environ.Env()
 environ.Env.read_env()
 
+
+
 API_TOKEN = env("API_TOKEN")
 MAX_DAILY_QUESTION_COUNT = 70
 
 bot = telebot.TeleBot(API_TOKEN)
 cache = diskcache.Cache('bot_cache_dir')
+logger = logging.getLogger(__name__)
 
 
 START_COMMANDS = ["start", "hello", "init", "begin"]
@@ -40,6 +44,11 @@ Tap 'About' to visit our website and learn more about what we're building.
 
 @bot.message_handler(commands=START_COMMANDS)
 def send_welcome(message: Message):
+    user_id = message.from_user.id
+    user_data = functions.get_user(str(user_id))
+    
+    print("✅✅✅ User data = ", user_data)
+
     referral_code = None
     if len(message.text.split()) > 1:
         referral_code = message.text.split()[1]
@@ -51,16 +60,12 @@ def send_welcome(message: Message):
     print(f"📊📊📊📊 {referral_code = }")
     # Create a reply keyboard markup
     markup = ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
-    btn1 = KeyboardButton(USAGE_COMMANDS[0], web_app=WebAppInfo(url="https://telegram-mini-app-ui-1kw5.onrender.com"))
+    btn1 = KeyboardButton(USAGE_COMMANDS[0], web_app=WebAppInfo(url=f"https://telegram-mini-app-ui-1kw5.onrender.com?user_id={user_id}"))
     btn2 = KeyboardButton(USAGE_COMMANDS[1])
     btn3 = KeyboardButton(USAGE_COMMANDS[2])
    
     # Add buttons to the markup
     markup.add(btn1, btn2, btn3)
-
-    user_id = message.from_user.id
-    user_data = functions.get_user(str(user_id))
-    print("✅✅✅ User data = ", user_data)
 
     # Send the welcome message along with the buttons
     bot.send_message(message.chat.id, FIRST_MESSAGE.format(user_id), reply_markup=markup)

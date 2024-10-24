@@ -8,20 +8,6 @@ cache = diskcache.Cache('bot_cache_dir')
 WEBAPP_BASEURL = "https://telegram-mini-app-api-m2uy.onrender.com"
 
 
-quiz_data = [
-    {"id": 1, "question": "What is the capital of France?", "options": ["Paris", "Berlin", "Madrid"], "answer": "Paris"},
-    {"id": 2, "question": "What is 2 + 2?", "options": ["3", "4", "5"], "answer": "4"},
-    {"id": 3, "question": "Which planet is known as the Red Planet?", "options": ["Earth", "Mars", "Jupiter"], "answer": "Mars"},
-    {"id": 4, "question": "Who wrote 'Romeo and Juliet'?", "options": ["William Shakespeare", "Mark Twain", "Charles Dickens"], "answer": "William Shakespeare"},
-    {"id": 5, "question": "What is the largest ocean on Earth?", "options": ["Atlantic Ocean", "Indian Ocean", "Pacific Ocean"], "answer": "Pacific Ocean"},
-    {"id": 6, "question": "What is the square root of 64?", "options": ["6", "8", "10"], "answer": "8"},
-    {"id": 7, "question": "Which element's chemical symbol is 'O'?", "options": ["Oxygen", "Osmium", "Gold"], "answer": "Oxygen"},
-    {"id": 8, "question": "Who painted the Mona Lisa?", "options": ["Leonardo da Vinci", "Vincent van Gogh", "Pablo Picasso"], "answer": "Leonardo da Vinci"},
-    {"id": 9, "question": "What is the smallest country in the world?", "options": ["Vatican City", "Monaco", "Malta"], "answer": "Vatican City"},
-    {"id": 10, "question": "Which continent is the Sahara Desert located in?", "options": ["Africa", "Asia", "Australia"], "answer": "Africa"}
-]
-
-
 def get_user(user_id: str) -> dict:
     url = f"{WEBAPP_BASEURL}/api/users/"
     try:

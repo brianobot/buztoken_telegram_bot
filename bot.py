@@ -11,7 +11,6 @@ from telebot.types import KeyboardButton
 from telebot.types import ReplyKeyboardMarkup
 from telebot.types import InlineKeyboardMarkup
 from telebot.types import InlineKeyboardButton
-from telebot.types import ReplyKeyboardRemove
 
 import functions
 

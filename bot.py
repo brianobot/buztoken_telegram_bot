@@ -93,7 +93,7 @@ def handle_usage_commands(message: Message):
 @bot.message_handler(commands=['config'])
 def user_info(message: Message):
     user_data = functions.get_user(str(message.from_user.id))
-    formatted_user_data = f"👤 **ID**: {user_data.get("id")},\n🐝 **Buz Tokens**: {user_data.get("buz_tokens", 0)},\n🧑‍🧒‍🧒 **Referrals**:  {user_data.get("referral_counts", 0)},"
+    formatted_user_data = f"👤 **ID**: {user_data.get('id')},\n🐝 **Buz Tokens**: {user_data.get('buz_tokens', 0)},\n🧑‍🧒‍🧒 **Referrals**:  {user_data.get('referral_counts', 0)},"
     bot.reply_to(message, formatted_user_data, parse_mode="Markdown")
 
 
